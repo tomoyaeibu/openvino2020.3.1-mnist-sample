@@ -1,0 +1,1 @@
+# openvino2020.3.1-mnist-sample
