@@ -1,6 +1,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <fstream>
 
 #include <inference_engine.hpp>
 #include <opencv2/opencv.hpp>
@@ -8,6 +9,41 @@
 using namespace InferenceEngine;
 
 #define WEIGHTS_EXT ".bin"
+
+inline void readRawFileFp64(const std::string& fileName, float* buffer, int inH, int inW, int inC)
+{
+	std::vector<double> temp(inH * inW * inC);
+
+	std::ifstream file(fileName, std::ios::in | std::ios::binary | std::ios::ate);
+	file.seekg(0, std::ios::end);
+	int size = file.tellg();
+	file.seekg(0, std::ios::beg);
+	file.read((char*)(temp.data()), size);
+	file.close();
+
+	for (int itr = 0; itr < inH * inW * inC; itr++)
+	{
+		buffer[itr] = (float)temp[itr];
+	}
+}
+
+
+void rawToBlob(const std::string rawFilePath, InferenceEngine::Blob::Ptr& blob)
+{
+	InferenceEngine::SizeVector blobSize = blob->getTensorDesc().getDims();
+	const size_t width = blobSize[3];
+	const size_t height = blobSize[2];
+	const size_t channels = blobSize[1];
+	float* blob_data = blob->buffer().as<float*>();
+
+	std::vector<float> input(width * height * channels);
+	readRawFileFp64(rawFilePath, input.data(), width, height, channels);
+
+	for (int index = 0; index < width * height * channels; index++)
+	{
+		blob_data[index] = input[index];
+	}
+}
 
 int ProcessOutput(InferRequest& async_infer_request, const std::string& output_name)
 {
@@ -41,35 +77,10 @@ int ProcessOutput(InferRequest& async_infer_request, const std::string& output_n
 	return result;
 }
 
-template <typename T>
-void matU8ToBlob(const cv::Mat& orig_image, InferenceEngine::Blob::Ptr& blob, int batchIndex = 0)
-{
-	InferenceEngine::SizeVector blobSize = blob->getTensorDesc().getDims();
-	const size_t width = blobSize[3];
-	const size_t height = blobSize[2];
-	const size_t channels = blobSize[1];
-	T* blob_data = blob->buffer().as<T*>();
-
-	cv::Mat resized_image(orig_image);
-	if (width != orig_image.size().width || height != orig_image.size().height) {
-		cv::resize(orig_image, resized_image, cv::Size(width, height));
-	}
-
-	int batchOffset = batchIndex * width * height * channels;
-
-	for (size_t c = 0; c < channels; c++) {
-		for (size_t h = 0; h < height; h++) {
-			for (size_t w = 0; w < width; w++) {
-				blob_data[batchOffset + c * width * height + h * width + w] = resized_image.at<cv::Vec3b>(h, w)[c];
-			}
-		}
-	}
-}
-
 int main(int argc, char *argv[]) {
     try {
-		const std::string input_model = "mnist.xml";
-		const std::string input_image_path = "one.png";
+		const std::string input_model = "model.xml";
+		const std::string input_image_path = "x_test[5].raw";
 		const std::string device_name = "CPU";
 
         // -----------------------------------------------------------------------------------------------------
@@ -89,7 +100,7 @@ int main(int argc, char *argv[]) {
         std::string input_name = network.getInputsInfo().begin()->first;
 
         input_info->setLayout(Layout::NCHW);
-        input_info->setPrecision(Precision::U8);
+        input_info->setPrecision(Precision::FP32);
 
         // --------------------------- Prepare output blobs ----------------------------------------------------
         DataPtr output_info = network.getOutputsInfo().begin()->second;
@@ -107,14 +118,18 @@ int main(int argc, char *argv[]) {
         // -----------------------------------------------------------------------------------------------------
 
         // --------------------------- 6. Prepare input --------------------------------------------------------
-		cv::Mat image = cv::imread(input_image_path, 1);
 		Blob::Ptr imgBlob = infer_request.GetBlob(input_name);
-		matU8ToBlob<uint8_t>(image, imgBlob);
-		
+		rawToBlob(input_image_path, imgBlob);
         // -----------------------------------------------------------------------------------------------------
 
         // --------------------------- 7. Do inference --------------------------------------------------------
+		auto t_infer_start = std::chrono::high_resolution_clock::now();
+
         infer_request.Infer();
+
+		auto t_infer_end = std::chrono::high_resolution_clock::now();
+		float infer_ms = std::chrono::duration<float, std::milli>(t_infer_end - t_infer_start).count();
+		printf("Time taken for inference : %lf ms\n", infer_ms);
         // -----------------------------------------------------------------------------------------------------
 
         // --------------------------- 8. Process output ------------------------------------------------------
