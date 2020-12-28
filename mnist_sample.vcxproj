@@ -110,7 +110,7 @@ xcopy "C:\Program Files (x86)\IntelSWTools\openvino\opencv\bin\opencv_imgproc430
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Intel\openvino\inference_engine\samples\cpp\common;C:\Program Files (x86)\Intel\openvino\opencv\include;C:\Program Files (x86)\Intel\openvino\deployment_tools\inference_engine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\IntelSWTools\openvino\inference_engine\samples\cpp\common;C:\Program Files (x86)\IntelSWTools\openvino\opencv\include;C:\Program Files (x86)\IntelSWTools\openvino\deployment_tools\inference_engine\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DisableSpecificWarnings>4251;4275;4267</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -140,7 +140,7 @@ xcopy "C:\Program Files (x86)\IntelSWTools\openvino\opencv\bin\opencv_imgproc430
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>C:\Program Files (x86)\Intel\openvino\opencv\lib\opencv_core430.lib;C:\Program Files (x86)\Intel\openvino\opencv\lib\opencv_imgcodecs430.lib;C:\Program Files (x86)\Intel\openvino\opencv\lib\opencv_imgproc430.lib;C:\Program Files (x86)\Intel\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine_legacy.lib;C:\Program Files (x86)\Intel\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine.lib;C:\Program Files (x86)\Intel\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine_c_api.lib;C:\Program Files (x86)\Intel\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine_nn_builder.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Program Files (x86)\IntelSWTools\openvino\opencv\lib\opencv_core430.lib;C:\Program Files (x86)\IntelSWTools\openvino\opencv\lib\opencv_imgcodecs430.lib;C:\Program Files (x86)\IntelSWTools\openvino\opencv\lib\opencv_imgproc430.lib;C:\Program Files (x86)\IntelSWTools\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine_legacy.lib;C:\Program Files (x86)\IntelSWTools\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine.lib;C:\Program Files (x86)\IntelSWTools\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine_c_api.lib;C:\Program Files (x86)\IntelSWTools\openvino\deployment_tools\inference_engine\lib\intel64\Release\inference_engine_nn_builder.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -155,14 +155,14 @@ xcopy "C:\Program Files (x86)\IntelSWTools\openvino\opencv\bin\opencv_imgproc430
     </ProjectReference>
     <PostBuildEvent>
       <Command>@rem For inference engine.
-xcopy "C:\Program Files (x86)\Intel\openvino\inference_engine\bin\intel64\$(Configuration)" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
-xcopy "C:\Program Files (x86)\Intel\openvino\deployment_tools\inference_engine\external\tbb\bin\tbb.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
-xcopy "C:\Program Files (x86)\Intel\openvino\deployment_tools\ngraph\lib\ngraph.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
+xcopy "C:\Program Files (x86)\IntelSWTools\openvino\inference_engine\bin\intel64\$(Configuration)" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
+xcopy "C:\Program Files (x86)\IntelSWTools\openvino\deployment_tools\inference_engine\external\tbb\bin\tbb.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
+xcopy "C:\Program Files (x86)\IntelSWTools\openvino\deployment_tools\ngraph\lib\ngraph.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
 
 @rem For opencv function.
-xcopy "C:\Program Files (x86)\Intel\openvino\opencv\bin\opencv_core430.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
-xcopy "C:\Program Files (x86)\Intel\openvino\opencv\bin\opencv_imgcodecs430.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
-xcopy "C:\Program Files (x86)\Intel\openvino\opencv\bin\opencv_imgproc430.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K</Command>
+xcopy "C:\Program Files (x86)\IntelSWTools\openvino\opencv\bin\opencv_core430.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
+xcopy "C:\Program Files (x86)\IntelSWTools\openvino\opencv\bin\opencv_imgcodecs430.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K
+xcopy "C:\Program Files (x86)\IntelSWTools\openvino\opencv\bin\opencv_imgproc430.dll" $(SolutionDir)$(Platform)\$(Configuration)\ /D /S /R /Y /I /K</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
